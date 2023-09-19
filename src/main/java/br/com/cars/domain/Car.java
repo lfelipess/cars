@@ -24,6 +24,10 @@ public class Car {
         this.uuid = "CAR-" + UUID.randomUUID();
     }
 
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
     public User getUser() {
         return user;
     }

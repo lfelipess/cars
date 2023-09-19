@@ -7,14 +7,12 @@ import br.com.cars.dto.response.CarResponse;
 import br.com.cars.exception.CarNotFoundException;
 import br.com.cars.exception.LicensePlateAlreadyExistsException;
 import br.com.cars.repository.CarRepository;
-import br.com.cars.repository.UserRepository;
 import br.com.cars.service.CarService;
 import br.com.cars.utils.TokenUtils;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -28,12 +26,6 @@ public class CarServiceImpl implements CarService {
 
     @Autowired
     CarRepository carRepository;
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    PasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     TokenUtils tokenUtils;
@@ -51,9 +43,9 @@ public class CarServiceImpl implements CarService {
         var car = mapper.map(request, Car.class);
         car.setUser(user);
 
-        carRepository.save(car);
+        var savedCar = carRepository.save(car);
 
-        return mapper.map(car, CarResponse.class);
+        return mapper.map(savedCar, CarResponse.class);
     }
 
     @Override

@@ -49,11 +49,11 @@ public class SignInServiceImpl implements SignInService {
         var user = userRepository.findModelByLogin(request.getLogin());
 
         if (isNull(user)){
-            throw new SignInInvalidException("Invalid login or password");
+            throw new SignInInvalidException();
         }
 
         if(!bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword())){
-            throw new SignInInvalidException("Invalid login or password");
+            throw new SignInInvalidException();
         }
 
         updateSignInDate(user);

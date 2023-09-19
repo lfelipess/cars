@@ -32,7 +32,7 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
-    private ModelMapper mapper;
+    private final ModelMapper mapper;
 
     @Autowired
     UserRepository repository;
@@ -72,9 +72,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         var users = repository.findAll();
         var response = new ArrayList<UserResponse>();
 
-        users.forEach(user -> response.add(mapper.map(user, UserResponse.class)));
+        if(CollectionUtils.isEmpty(users)) {
+            throw new UserNotFoundException();
+        }
 
+        users.forEach(user -> response.add(mapper.map(user, UserResponse.class)));
         return response;
+
     }
 
     @Override
@@ -116,9 +120,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private void validateRequest(String email, String login) {
         if (repository.existsByEmail(email)){
-            throw new EmailAlreadyExistsException("Email already exists");
+            throw new EmailAlreadyExistsException();
         } else if(repository.existsByLogin(login)){
-            throw new LoginAlreadyExistsException("Login already exists");
+            throw new LoginAlreadyExistsException();
         }
     }
 
